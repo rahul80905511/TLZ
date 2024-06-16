@@ -1,0 +1,53 @@
+{
+  "name": "tlz",
+  "version": "0.0.1",
+  "private": true,
+  "proxy": "https://bws.bioid.com",
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-picker/picker": "^2.7.7",
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/native-stack": "^6.9.26",
+    "@react-navigation/stack": "^6.3.29",
+    "axios": "^1.7.2",
+    "buffer": "^6.0.3",
+    "https-proxy-agent": "^7.0.4",
+    "react": "18.1.0",
+    "react-native": "0.70.5",
+    "react-native-base64": "^0.2.1",
+    "react-native-circular-progress": "^1.4.0",
+    "react-native-document-picker": "^9.3.0",
+    "react-native-elements": "^3.4.3",
+    "react-native-fs": "^2.20.0",
+    "react-native-gesture-handler": "^2.16.2",
+    "react-native-image-picker": "^7.1.2",
+    "react-native-progress": "^5.0.1",
+    "react-native-progress-circle": "^2.1.0",
+    "react-native-safe-area-context": "^4.10.4",
+    "react-native-screens": "^3.31.1",
+    "react-native-step-indicator": "^1.0.3",
+    "react-native-svg": "^15.3.0",
+    "react-native-vector-icons": "^10.1.0",
+    "react-native-webview": "^13.10.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.32.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "0.72.3",
+    "react-test-renderer": "18.1.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
