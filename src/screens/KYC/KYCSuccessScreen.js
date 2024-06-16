@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   Modal,
   Platform,
-  PermissionsAndroid,
 } from 'react-native';
 import bell from '../../assests/bell.png';
 import Stepper from '../../utils/Stepper';
@@ -172,7 +171,7 @@ const KYCSuccessScreen = ({navigation}) => {
         [MARITIALINFO]: maritialInfo,
         [FAMILYINFO]: familyInfo,
         [PEPCHECK]: pepCheck,
-        [EMIRATESDATA]: emiratedData,
+        [EMIRATESDATA]:emiratedData
       });
 
       // Prepare the form data
@@ -247,8 +246,9 @@ const KYCSuccessScreen = ({navigation}) => {
           ? 'Yes'
           : 'No',
         IF_YOU_HAVE_ANSWERED_YES_TO_ANY_OF_THE_QUESTIONS_ABOVE_PLEASE_PROVIDE_DETAILS_BELOW:
-          pepCheck[7] ? 'Yes' : 'N/A',
+          pepCheck[7]?"Yes":"N/A",
       };
+
 
       // Append fields to formData
       Object.entries(fields).forEach(([key, value]) => {
@@ -289,32 +289,33 @@ const KYCSuccessScreen = ({navigation}) => {
           ? `${RNFS.DownloadDirectoryPath}/downloaded.pdf`
           : `${RNFS.DocumentDirectoryPath}/downloaded.pdf`;
 
-      //Permissions
-
-      const requestPermissions = async () => {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-            {
-              title: 'Storage Permission',
-              message: 'App needs access to your storage to download the file',
-              buttonNeutral: 'Ask Me Later',
-              buttonNegative: 'Cancel',
-              buttonPositive: 'OK',
-            },
-          );
-          if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-            throw new Error('Storage permission not granted');
+          //Permissions
+          
+          const requestPermissions = async () => {
+            try {
+              const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                  title: 'Storage Permission',
+                  message: 'App needs access to your storage to download the file',
+                  buttonNeutral: 'Ask Me Later',
+                  buttonNegative: 'Cancel',
+                  buttonPositive: 'OK',
+                },
+              );
+              if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+                throw new Error('Storage permission not granted');
+              }
+            } catch (err) {
+              console.warn(err);
+              throw err;
+            }
+          };
+      
+          if (Platform.OS === 'android') {
+            await requestPermissions();
           }
-        } catch (err) {
-          console.warn(err);
-          throw err;
-        }
-      };
-
-      if (Platform.OS === 'android') {
-        await requestPermissions();
-      }
+      
 
       // Save the PDF to the file system
       RNFS.writeFile(path, base64Data, 'base64')
