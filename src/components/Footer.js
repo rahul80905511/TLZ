@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-const Footer = ({ navigation }) => {
+const Footer = ({ navigation, extraStyle = {} }) => {
   return (
-    <View style={styles.footer}>
-      <TouchableOpacity>
+    <View style={[styles.footer, extraStyle]}>
+      <TouchableOpacity onPress={() => navigation.navigate('login')}>
         <Image source={require('../assests/home1.png')} style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.circularbtn}>

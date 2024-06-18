@@ -1,27 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
-  Button,
-  Dimensions,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View,
+  ScrollView,
   Modal,
-  Platform,
-  ImageBackground,
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
+import Collapsible from 'react-native-collapsible';
 import bell from '../../assests/bell.png';
-import Stepper from '../../utils/Stepper';
-import ImagePickerButton from '../../components/ImagePickerButton';
-import axios from 'axios';
-import ImagePicker from '../../Testing/ImagePicker';
-import attach from '../../assests/success.png';
-const {width, height} = Dimensions.get('window');
-import RNFS from 'react-native-fs';
+import three from '../../assests/three.png';
 import {
+  getData,
   CONTACTINFORMATION,
   EMIRATESDATA,
   FAMILYINFO,
@@ -32,9 +25,18 @@ import {
   PEPCHECK,
   PERSONALDETAILS,
   UAEADDRINFO,
-  getData,
 } from '../../utils/storage';
-const KYCSuccessScreen = ({navigation}) => {
+import axios from 'axios';
+import RNFS from 'react-native-fs';
+import WebView from 'react-native-webview';
+
+const DocumentVault = ({navigation}) => {
+  const [collapsed, setCollapsed] = useState(new Array(6).fill(true));
+
+  const toggleExpanded = index => {
+    setCollapsed(collapsed.map((item, idx) => (idx === index ? !item : item)));
+  };
+
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -48,38 +50,29 @@ const KYCSuccessScreen = ({navigation}) => {
   const [familyInfo, setFamilyInfo] = useState(null);
   const [pepCheck, setPepCheck] = useState(null);
   const [emiratedData, setEmiratesData] = useState(null);
-
-  const showSuccessModal = () => {
-    setModalMessage('Download Completed');
-    setShowModal(true);
-  };
-
-  const showErrorModal = (massage = '') => {
-    if (!massage) {
-      setModalMessage('Verification Failed. Please check details.');
-    } else {
-      setModalMessage(massage);
-    }
-
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  const downloadfile = async () => {
-    setIsLoading(true); // Show loader
-    setTimeout(() => {
-      showSuccessModal();
-    }, 1000); // 3000 milliseconds = 3 seconds
-
-    setTimeout(() => {
-      navigation.navigate('appJourney');
-    }, 5000); // 3000 milliseconds = 3 seconds
-  };
+  //states to get data
+  const [passportFront, setpassportFront] = useState(null);
+  const [passportBack, setpassportBack] = useState(null);
+  const [sign, setsign] = useState(null);
 
   useEffect(() => {
+    getData('passportFront')
+      .then(data => {
+        setpassportFront(data);
+        return getData('passportBack');
+      })
+      .then(data => {
+        setpassportBack(data);
+        return getData('e-sign');
+      })
+      .then(data => {
+        setsign(data);
+      })
+      .catch(error => {
+        // Handle any errors that occurred during the fetching or setting process
+        console.error('Error:', error);
+      });
+
     getData(PASSPORTDATAKEY)
       .then(data => {
         setPassportinfo(data);
@@ -162,6 +155,25 @@ const KYCSuccessScreen = ({navigation}) => {
       });
   }, []);
 
+  const showSuccessModal = () => {
+    setModalMessage('Download Completed');
+    setShowModal(true);
+  };
+
+  const showErrorModal = (massage = '') => {
+    if (!massage) {
+      setModalMessage('Verification Failed. Please check details.');
+    } else {
+      setModalMessage(massage);
+    }
+
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const handleUploadAndDownload = async () => {
     try {
       console.log({
@@ -172,7 +184,7 @@ const KYCSuccessScreen = ({navigation}) => {
         [MARITIALINFO]: maritialInfo,
         [FAMILYINFO]: familyInfo,
         [PEPCHECK]: pepCheck,
-        [EMIRATESDATA]:emiratedData
+        [EMIRATESDATA]: emiratedData,
       });
 
       // Prepare the form data
@@ -247,9 +259,8 @@ const KYCSuccessScreen = ({navigation}) => {
           ? 'Yes'
           : 'No',
         IF_YOU_HAVE_ANSWERED_YES_TO_ANY_OF_THE_QUESTIONS_ABOVE_PLEASE_PROVIDE_DETAILS_BELOW:
-          pepCheck[7]?"Yes":"N/A",
+          pepCheck[7] ? 'Yes' : 'N/A',
       };
-
 
       // Append fields to formData
       Object.entries(fields).forEach(([key, value]) => {
@@ -281,6 +292,8 @@ const KYCSuccessScreen = ({navigation}) => {
         });
       };
 
+      console.log(blobToBase64);
+
       // Convert response data to base64
       const base64Data = await blobToBase64(response.data);
 
@@ -290,10 +303,7 @@ const KYCSuccessScreen = ({navigation}) => {
           ? `${RNFS.DownloadDirectoryPath}/downloaded${Date.now()}.pdf`
           : `${RNFS.DocumentDirectoryPath}/downloaded.pdf`;
 
-          //Permissions
-          
-          
-      
+      //Permissions
 
       // Save the PDF to the file system
       RNFS.writeFile(path, base64Data, 'base64')
@@ -301,10 +311,13 @@ const KYCSuccessScreen = ({navigation}) => {
           setIsLoading(false); // Show loader
           showSuccessModal();
           setTimeout(() => {
-            navigation.navigate('appJourney');
+            // navigation.navigate('appJourney');
           }, 3000);
         })
         .catch(e => {
+          console.log('====================================');
+          console.log(e);
+          console.log('====================================');
           setIsLoading(false);
           showErrorModal(e.massage);
         });
@@ -313,108 +326,179 @@ const KYCSuccessScreen = ({navigation}) => {
     }
   };
 
+  const accordionItems = [
+    'Passport Front',
+    'Passport Back',
+    'E-sign',
+    'TLZ T&C',
+    'IFZA T&C',
+    'Download KYC',
+  ];
+
+  const pdfurl =
+    'https://firebasestorage.googleapis.com/v0/b/reactproject-e9f5c.appspot.com/o/2_Terms%20-%20Conditions%20(Free%20Zone%20Services)%20-%20Trade%20License%20Zone%20Signed%201.pdf?alt=media&token=01b8d142-4018-4971-9e22-0f4666258a63';
+  const pdfurl2 =
+    'https://firebasestorage.googleapis.com/v0/b/reactproject-e9f5c.appspot.com/o/3_IFZA_Dubai_T-C%20Signed%201.pdf?alt=media&token=19cd52c8-5a22-417d-b963-dbe672e41271';
+  const accordionContents = [
+    <View>
+      <Image source={{uri: passportFront}} style={{width: 250, height: 100}} />
+    </View>,
+    <View>
+      <Image source={{uri: passportBack}} style={{width: 250, height: 100}} />
+    </View>,
+    <View>
+      <Image source={{uri: sign}} style={{width: 250, height: 100}} />
+    </View>,
+    <View style={{flex: 1}}>
+      <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow: 1}}>
+        <WebView
+          startInLoadingState={true}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          style={{height: Dimensions.get('window').height, width: '100%'}}
+          source={{
+            uri: `https://docs.google.com/viewer?url=${pdfurl}&embedded=true`,
+          }}
+        />
+      </ScrollView>
+    </View>,
+    <View style={{flex: 1}}>
+      <ScrollView nestedScrollEnabled={true} contentContainerStyle={{flexGrow: 1}}>
+        <WebView
+          startInLoadingState={true}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          style={{height: Dimensions.get('window').height, width: '100%'}}
+          source={{
+            uri: `https://docs.google.com/viewer?url=${pdfurl2}&embedded=true`,
+          }}
+        />
+      </ScrollView>
+    </View>,
+    null,
+  ];
+
+  const renderAccordionContent = index => {
+    if (index === accordionItems.length - 1) {
+      return (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleUploadAndDownload}>
+          <Text style={styles.buttonText}>Download KYC</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      return accordionContents[index];
+    }
+  };
+
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-      <View style={{flex: 1}}>
-        <View style={styles.headerContainer}>
-          <Text style={{fontSize: 17, fontWeight: '400',color:'#546881'}}>
-            KYC & Compliance
-          </Text>
-          <Image source={bell} style={{position: 'relative', left: 70}} />
-        </View>
-        <View style={styles.stepperContainer}>
-          <Stepper currentPosition={4} />
-        </View>
-
-        <View style={styles.passportContainer}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.congratetext}>Congrats!</Text>
-          </View>
-
-          <View style={styles.headerContainer}>
-            <Image
-              source={attach}
-              style={{
-                width: width * 0.83,
-                height: 178,
-                position: 'relative',
-                resizeMode: 'contain',
-              }}
-            />
-          </View>
-          <View style={styles.headerContainer}>
-            <Text style={styles.completetext}>
-              Congratulations! The application process is completed!
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.buttonContainerbtn}
-            onPress={handleUploadAndDownload}>
-            <ImageBackground
-              source={require('../../assests/rectangleButton.png')}
-              style={styles.imageBackground}>
-              <Text style={styles.buttonTextfoot}>
-              Download Compliance
-              </Text>
-            </ImageBackground>
-          </TouchableOpacity>
-        </View>
-
-
-        {/* Loader */}
-        {isLoading && (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        )}
-
-        {/* Modal for success or error */}
-        <Modal
-          visible={showModal}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={closeModal}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalText}>{modalMessage}</Text>
-              <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
-                <Text style={styles.modalButtonText}>OK</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+    <View style={styles.mainContainer}>
+      <View style={styles.headerContainer}>
+        <Text style={{fontSize: 20}}>Document Vault</Text>
+        <Image source={bell} style={{position: 'absolute', right: '5%'}} />
       </View>
-    </ScrollView>
+      <ScrollView>
+        {accordionItems.map((item, index) => (
+          <View key={index} style={styles.accordionContainer}>
+            <TouchableOpacity
+              onPress={() => toggleExpanded(index)}
+              style={styles.accordionHeader}>
+              <Text style={styles.accordionHeaderText}>{item}</Text>
+              <Image source={three} style={{height: '90%'}} />
+            </TouchableOpacity>
+            <Collapsible collapsed={collapsed[index]}>
+              <View style={styles.accordionContent}>
+                {renderAccordionContent(index)}
+              </View>
+            </Collapsible>
+          </View>
+        ))}
+      </ScrollView>
+      <Modal
+        visible={showModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeModal}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {isLoading && (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  buttonContainerbtn: {
-    width: width * 0.79,
-    height: height * 0.06,
-    borderRadius: 15,
-    overflow: 'hidden',
-    marginTop: 5,
-  },
-  imageBackground: {
+  mainContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonTextfoot: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
+    padding: 16,
   },
   headerContainer: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: '7%',
+    alignItems: 'center',
+    marginBottom: 20,
+    marginTop: '5%',
   },
+  accordionContainer: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#52ABC7',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    marginTop: '10%',
+  },
+  accordionHeader: {
+    padding: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  accordionHeaderText: {
+    color: '#000',
+    fontSize: 16,
+  },
+  accordionContent: {
+    padding: 16,
+  },
+  accordionImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'contain',
+  },
+  button: {
+    backgroundColor: '#074E76',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  //   headerContainer: {
+  //     display: 'flex',
+  //     flexDirection: 'row',
+  //     justifyContent: 'center',
+  //     marginTop: '7%',
+  //   },
   congratetext: {
     color: '#000',
     fontWeight: 'bold',
@@ -424,7 +508,6 @@ const styles = StyleSheet.create({
     width: '80%',
     textAlign: 'center',
     marginVertical: 40,
-    color:'#546881'
   },
   stepperContainer: {
     marginTop: '3%',
@@ -491,4 +574,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default KYCSuccessScreen;
+export default DocumentVault;

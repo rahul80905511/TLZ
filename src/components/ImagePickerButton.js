@@ -6,7 +6,7 @@ import attach from '../assests/attach.png';
 const { height, width } = Dimensions.get('window');
 
 const ImagePicker = ({ onImageSelect }) => {
-  const [imageName, setImageName] = useState('image.png'); // State to hold the image name
+  const [imageName, setImageName] = useState('Upload Image'); // State to hold the image name
 
   const pickImage = () => {
     let options = {
@@ -40,7 +40,7 @@ const ImagePicker = ({ onImageSelect }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TouchableOpacity style={styles.borderImage} onPress={showImagePickerOptions}>
         <Image
           source={attach}
@@ -55,10 +55,11 @@ const ImagePicker = ({ onImageSelect }) => {
 };
 
 const styles = StyleSheet.create({
+
   attachContainer: {
     width: "89%",
     height: "37%",
-    borderColor: '#52ABC7',
+    borderColor: '#eef0f1',
     borderWidth: 2,
     borderRadius: 5,
     marginLeft: '0.5%',
@@ -66,12 +67,13 @@ const styles = StyleSheet.create({
   borderImage: {
     flexDirection: "row",
     alignItems: "center",
-    borderColor: '#52ABC7',
+    borderColor: '#eef0f1',
     borderWidth: 2,
     borderRadius: 5,
     width: "90%"
   },
   imagetext: {
+    marginLeft:5,
 color: "#006AFF"
   }
 });

@@ -17,6 +17,8 @@ import ImagePickerButton from '../../components/ImagePickerButton';
 import axios from 'axios';
 import ImagePicker from '../../Testing/ImagePicker';
 import { IMAGEDATAKEY, storeData } from '../../utils/storage';
+import vectorimg from '../../assests/Vector.png';
+import ProgressBar from '../../components/ProgressBar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -55,7 +57,9 @@ const ESignScreen = ({ navigation }) => {
 
 const saveAndContinue = async () => {
     setIsLoading(true); // Show loader
+    await storeData('e-sign', selectedImage2.uri);
     if (selectedImage2){
+
         showSuccessModal();
         setTimeout(() => {
             navigation.navigate('pepCheck');
@@ -68,17 +72,29 @@ const saveAndContinue = async () => {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={{ flex: 1 }}>
-        <View style={styles.headerContainer}>
-          <Text style={{ fontSize: 16, fontWeight: '400' }}>
-            KYC & Compliance
-          </Text>
-          <Image source={bell} style={{ position: 'relative', left: 70 }} />
-        </View>
-        <View style={styles.stepperContainer}>
-          <Stepper currentPosition={2} />
-        </View>
+      <View style={{ flex: 1,backgroundColor:"#fff" }}>
+      <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image source={vectorimg} style={styles.bellImage} />
+      </TouchableOpacity>
 
+      <Text style={{fontSize: 20, color: '#3D4C5E'}}>
+        KYC & Compliance
+      </Text>
+      <Image source={bell} style={styles.bellImage} />
+    </View>
+        <View style={styles.stepperContainer}>
+          <Stepper currentPosition={3} />
+        </View>
+        <View style={{width: '100%'}}>
+        <ProgressBar
+          progress={0.9}
+          label="Progress"
+          height={20}
+          color="#004A70"
+          unfilledColor="#E0E0E0"
+        />
+      </View>
         
         <View style={styles.passportContainer}>
         <View style={{ marginVertical: '5%' }}>
@@ -89,12 +105,12 @@ const saveAndContinue = async () => {
               width: width * 0.83,
               height: 178,
               position: 'relative',
-              resizeMode: 'cover',
+              resizeMode: 'contain',
             }}
           />
         )}
       </View>
-          <Text style={{ marginBottom: 15, fontWeight: 'bold' }}>
+          <Text style={{ marginBottom: 15, fontWeight: 'bold' ,color:'#546881'}}>
             Drop your Signature Image
           </Text>
           <ImagePicker
@@ -142,8 +158,12 @@ const styles = StyleSheet.create({
   headerContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: '7%',
+    justifyContent: 'space-around',
+    position: 'relative',
+    top: '4%',
+    width: '100%',
+    alignItems: 'center',
+    marginBottom:'6%'
   },
   stepperContainer: {
     marginTop: '3%',
@@ -195,6 +215,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center',
+    color:'#546881'
   },
   modalButton: {
     backgroundColor: '#074E76',

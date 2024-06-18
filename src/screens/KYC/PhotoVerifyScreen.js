@@ -16,6 +16,9 @@ import Stepper from '../../utils/Stepper';
 import ImagePickerButton from '../../components/ImagePickerButton';
 import axios from 'axios';
 import ImagePicker from '../../Testing/ImagePicker';
+import vectorimg from '../../assests/Vector.png';
+import Footer from '../../components/Footer';
+import ProgressBar from '../../components/ProgressBar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -106,20 +109,33 @@ const PhotoVerifyScreen = ({ navigation }) => {
   };
 
   return (
+    <View>
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={{ flex: 1 }}>
-        <View style={styles.headerContainer}>
-          <Text style={{ fontSize: 16, fontWeight: '400' }}>
-            KYC & Compliance
-          </Text>
-          <Image source={bell} style={{ position: 'relative', left: 70 }} />
-        </View>
-        <View style={styles.stepperContainer}>
-          <Stepper currentPosition={1} />
-        </View>
+      <View style={{ flex: 1,backgroundColor:'#fff' }}>
+      <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image source={vectorimg} style={styles.bellImage} />
+      </TouchableOpacity>
 
+      <Text style={{fontSize: 20, color: '#3D4C5E'}}>
+        KYC & Compliance
+      </Text>
+      <Image source={bell} style={styles.bellImage} />
+    </View>
+        <View style={styles.stepperContainer}>
+          <Stepper currentPosition={3} />
+        </View>
+        <View style={{width: '100%'}}>
+        <ProgressBar
+          progress={0.81}
+          label="Progress"
+          height={20}
+          color="#004A70"
+          unfilledColor="#E0E0E0"
+        />
+      </View>
         <View style={styles.passportContainer}>
-          <Text style={{ marginBottom: 15, fontWeight: 'bold' }}>
+          <Text style={{ marginBottom: 15, fontWeight: 'bold' ,color:'#546881'}}>
             Identity Proof
           </Text>
           <ImagePickerButton onImageSelect={handleImageSelect} />
@@ -137,7 +153,7 @@ const PhotoVerifyScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.passportContainer}>
-          <Text style={{ marginBottom: 15, fontWeight: 'bold' }}>
+          <Text style={{ marginBottom: 15, fontWeight: 'bold' ,color:'#546881'}}>
             Capture Your Live Photo
           </Text>
           <ImagePicker
@@ -159,7 +175,7 @@ const PhotoVerifyScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.passportContainer}>
-          <Text style={{ marginBottom: 15, fontWeight: 'bold' }}>
+          <Text style={{ marginBottom: 15, fontWeight: 'bold',color:'#546881' }}>
             Capture Your Live Photo
           </Text>
           <ImagePicker
@@ -210,7 +226,12 @@ const PhotoVerifyScreen = ({ navigation }) => {
           </View>
         </Modal>
       </View>
+      
     </ScrollView>
+    <View >
+       <Footer/>
+      </View>
+      </View>
   );
 };
 
@@ -218,8 +239,12 @@ const styles = StyleSheet.create({
   headerContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: '7%',
+    justifyContent: 'space-around',
+    position: 'relative',
+    top: '4%',
+    width: '100%',
+    alignItems: 'center',
+    marginBottom:'5%'
   },
   stepperContainer: {
     marginTop: '3%',
@@ -227,11 +252,12 @@ const styles = StyleSheet.create({
   passportContainer: {
     marginTop: '8%',
     marginLeft: '8%',
+    marginBottom:"3%"
   },
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
+    marginBottom: "26%",
   },
   button: {
     backgroundColor: '#074E76',

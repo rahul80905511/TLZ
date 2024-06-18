@@ -6679,6 +6679,11 @@
     "jscodeshift" "^0.14.0"
     "nullthrows" "^1.1.1"
 
+"react-native-collapsible@^1.6.1":
+  "integrity" "sha512-orF4BeiXd2hZW7fu9YcqIJXzN6TJcFcddY807D3MAOVktLuW9oQ+RIkrTJ5DR3v9ZOFfREkOjEmS79qeUTvkBQ=="
+  "resolved" "https://registry.npmjs.org/react-native-collapsible/-/react-native-collapsible-1.6.1.tgz"
+  "version" "1.6.1"
+
 "react-native-document-picker@^9.3.0":
   "integrity" "sha512-X/j0xKn8cObckpHTNwE/hW9WzBiP6oKx820FYu1Nat43QnnHmmT6uozFgAUDcJfxmZGcEdLlbv0lNhnyRXJyyA=="
   "resolved" "https://registry.npmjs.org/react-native-document-picker/-/react-native-document-picker-9.3.0.tgz"

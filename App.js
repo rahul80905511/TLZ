@@ -25,6 +25,8 @@ import FamilyBackground from './src/screens/KYC/FamilyBackground';
 import EmiratesIdUpload from './src/screens/KYC/EmiratesIdUpload';
 import { PEPCHECK } from './src/utils/storage';
 import PEPCheck from './src/screens/KYC/PEPCheck';
+import MainDashBoard from './src/screens/Dashboard/MainDashBoard';
+import DocumentVault from './src/screens/Dashboard/DocumentVault';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -46,18 +48,21 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-     
-  
-        <Stack.Screen
-          name="onboarding"
-          component={OnboardingScreen}
-          options={{headerShown: false}}
-        />
         <Stack.Screen
           name="login"
           component={LoginScreen}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="dashboard"
+          component={MainDashBoard}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+        name="docVault"
+        component={DocumentVault}
+        options={{headerShown: false}}
+      />
         <Stack.Screen
           name="forgotPassword"
           component={ForgotPasswordScreen}

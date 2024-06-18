@@ -72,7 +72,7 @@ const ImagePicker = ({ imagePickerCallback, captureImage }) => {
         <Image source={attach} style={{ width: 40, height: 40 }} />
         <View style={styles.textview}>
           <Text style={styles.imagetext}>
-            {selectedImage ? selectedImage.uri.split('/').pop() : 'image.png'}
+            {selectedImage ? selectedImage.uri.split('/').pop() : 'Upload image'}
             {/* Displaying image name or a default name */}
           </Text>
         </View>
@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
   borderImage: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#52ABC7',
+    borderColor: '#eef0f1',
     borderWidth: 2,
     borderRadius: 5,
     width: '90%',
   },
   imagetext: {
     color: '#006AFF',
-    
+    marginLeft:5,
   },
   textview:{
 width:"80%"

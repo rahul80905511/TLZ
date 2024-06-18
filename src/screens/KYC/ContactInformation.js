@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, Image, TextInput, ScrollView, TouchableOpacity, Alert, ImageBackground, Dimensions } from 'react-native';
 import bell from '../../assests/bell.png'; // Make sure this path is correct
 import Stepper from '../../utils/Stepper';
 import Footer from '../../components/Footer';
 import { CONTACTINFORMATION, storeData } from '../../utils/storage';
+import vectorimg from '../../assests/Vector.png';
+import ProgressBar from '../../components/ProgressBar';
+const {width, height} = Dimensions.get('window');
 
 const ContactInformation = ({navigation}) => {
   const [localMobNumber, setlocalMobNumber] = useState('');
@@ -21,26 +24,38 @@ const ContactInformation = ({navigation}) => {
     })
   } 
   return (
-    <View>
+    <View style={styles.container}>
     <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.headerContainer}>
-      <Text style={{ fontSize: 20 }}>
-        KYC & Compliance
-      </Text>
-      <Image
-        source={bell}
-        style={{ position: 'absolute', right: '5%' }}
-      />
-    </View>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image source={vectorimg} style={styles.bellImage} />
+            </TouchableOpacity>
+
+            <Text style={{fontSize: 20, color: '#3D4C5E'}}>
+              KYC & Compliance
+            </Text>
+            <Image source={bell} style={styles.bellImage} />
+          </View>
     <View style={{ marginTop: '10%' }}>
       <Stepper currentPosition={3} />
     </View>
-
+    <View style={{width: '100%'}}>
+    <ProgressBar
+      progress={0.27}
+      label="Progress"
+      height={20}
+      color="#004A70"
+      unfilledColor="#E0E0E0"
+    />
+  </View>
     <View style={{ marginLeft: '11%', marginTop: '5%' }}>
       <Text style={{ fontSize: 18, fontWeight: '500', color: '#1D242D' }}>
         Contact Information
       </Text>
     </View>
+
+    
+
 
     <View style={styles.inputContainer}>
       <Text style={styles.inputLabel}>Local Mobile No.</Text>
@@ -73,11 +88,22 @@ const ContactInformation = ({navigation}) => {
     />
   </View>
 
-  <TouchableOpacity style={styles.button}  onPress={saveContactInfo}>
-  <Text style={styles.buttonText}>Continue</Text>
+
+
+<View style={styles.buttonContainer}>
+<TouchableOpacity
+  style={styles.buttonContainerbtn}
+  onPress={saveContactInfo}>
+  <ImageBackground
+    source={require('../../assests/rectangleButton.png')}
+    style={styles.imageBackground}>
+    <Text style={styles.buttonTextfoot}>Continue</Text>
+  </ImageBackground>
 </TouchableOpacity>
+</View>
+
   </ScrollView>
-   <View style={{position:'relative',top:85}}>
+   <View style={{position:'relative',top:22}}>
    <Footer/>
    </View>
     </View>
@@ -85,16 +111,45 @@ const ContactInformation = ({navigation}) => {
 }
 
 const styles = StyleSheet.create({
+  container:{
+    backgroundColor:"#fff"
+  },
+  buttonContainer: {
+    marginTop: '3%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonContainerbtn: {
+    width: width * 0.79,
+    height: height * 0.06,
+    borderRadius: 15,
+    overflow: 'hidden',
+    marginTop: 5,
+    marginBottom: '20%',
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonTextfoot: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 20,
   },
   headerContainer: {
-    display: 'flex',
+   display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     position: 'relative',
-    top: '6%',
+    top: '1%',
+    width: '100%',
+    alignItems: 'center',
+    marginTop:'5%'
   },
   inputContainer: {
     marginLeft: '11%',
@@ -106,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   input: {
-    backgroundColor: '#E8EAF0',
+    backgroundColor: '#eef0f1',
     paddingTop: 10,
     paddingRight: 12,
     paddingBottom: 10,
@@ -114,6 +169,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: '4%',
     width: '90%',
+    color:'#546881'
   },
   button: {
     backgroundColor: '#074E76',

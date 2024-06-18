@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 import user from '../../assests/user.png';
 import password from '../../assests/password.png';
@@ -25,7 +26,7 @@ export default function LoginScreen({navigation}) {
           alignItems: 'center',
         }}>
         <Image
-          source={require('../../assests/sliderbg.png')}
+          source={require('../../assests/loginimg.png')}
           style={styles.image}
         />
         <Image
@@ -36,7 +37,7 @@ export default function LoginScreen({navigation}) {
       <Text style={styles.welcomeText}>Welcome!</Text>
       <Text style={styles.labelText}>Username</Text>
       <View style={styles.inputContainer}>
-        <Image source={user} />
+        <Image  source={user} />
         <TextInput
           style={styles.input}
           placeholder="User Name"
@@ -45,7 +46,7 @@ export default function LoginScreen({navigation}) {
       </View>
       <Text style={styles.labelText}>Password</Text>
       <View style={styles.inputContainer}>
-        <Image source={password} />
+        <Image source={password} style={styles.textimg}/>
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -68,34 +69,54 @@ export default function LoginScreen({navigation}) {
         accessibilityHint="Navigate to the app journey screen">
         <Text style={styles.loginButtonText}>Log in</Text>
       </TouchableOpacity>*/}
-      <TouchableOpacity style={{marginTop:'3%'}}>
-        <Image source={rectangleButton} style={{width: width * 0.8,height:40}} />
-
-        <Text style={{position: 'absolute', color: 'white', left: '40%',top:'25%'}}>
-          Log in
-        </Text>
-      </TouchableOpacity>
+      <TouchableOpacity style={styles.buttonContainer} onPress={() => navigation.navigate('appJourney')}>
+      <ImageBackground source={rectangleButton} style={styles.imageBackground} >
+        <Text style={styles.buttonText}>Log in</Text>
+      </ImageBackground>
+    </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    width: width *0.9,
+    height: height* 0.06,
+    borderRadius: 15,
+    overflow: 'hidden',
+    marginTop:5,
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  },
+  imagebtn: {
+    borderRadius: 25,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   image: {
     width: width,
     height: height * 0.4,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     marginBottom: 5,
+    marginTop:"-14%"
   },
   logoImage: {
-    width: width * 0.8,
-    height: height * 0.1,
+    width: width * 1.7,
+    height: height * 0.15,
     resizeMode: 'contain',
     marginBottom: 20,
   },
@@ -115,6 +136,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: '#000',
   },
+textimg:{
+  height:20,
+  width:15,
+},
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -123,7 +148,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 15,
+    marginBottom: 10,
     paddingHorizontal: 10,
   },
   icon: {
@@ -137,7 +162,7 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     alignSelf: 'flex-end',
-    marginBottom: 0,
+    marginBottom: 5,
   },
   forgotPasswordText: {
     fontFamily: 'Helvetica Neue',

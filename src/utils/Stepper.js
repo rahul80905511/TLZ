@@ -1,18 +1,20 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 
 const labels = [
-  'Step 1',
-  'Step 2',
-  'Step 3',
-  'Step 4',
-  'Step 5',
-  'Step 6',
-  'Step 7',
-  'Step 8',
-  'Step 9',
-  'Finish',
+  'Applications ',
+  'Applications 1',
+  'Applications 2',
+  'Applications 3',
+  'KYC & Compliance',
+  'Applications 5',
+  'Applications 6',
+  'Applications 7',
+  'Applications 8',
+  'Applications 9',
+  'Applications 10',
+  'Applications 11',
 ];
 const customStyles = {
   stepIndicatorSize: 20,
@@ -38,34 +40,50 @@ const customStyles = {
   currentStepLabelColor: 'transparent', // Hide default labels
 };
 
-const Stepper = ({currentPosition}) => (
-  <View style={styles.container}>
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <View>
-        <StepIndicator
-          customStyles={customStyles}
-          currentPosition={currentPosition}
-          stepCount={10}
-          labels={[]} // Disable default labels
-        />
-        <View style={styles.labelsContainer}>
-          {labels.map((label, index) => (
-            <View key={index} style={styles.labelContainer}>
-              <Text
-                style={[
-                  styles.label,
-                  currentPosition > index && styles.finishedLabel,
-                  currentPosition === index && styles.currentLabel,
-                ]}>
-                {label}
-              </Text>
-            </View>
-          ))}
+const Stepper = ({currentPosition}) => {
+  const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      const xOffset = currentPosition * 100; // Adjust based on your label width and spacing
+      scrollViewRef.current.scrollTo({x: xOffset, animated: true});
+    }
+  }, [currentPosition]);
+
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        ref={scrollViewRef}
+      >
+        <View>
+          <StepIndicator
+            customStyles={customStyles}
+            currentPosition={currentPosition}
+            stepCount={11}
+            labels={[]} // Disable default labels
+          />
+          <View style={styles.labelsContainer}>
+            {labels.map((label, index) => (
+              <View key={index} style={styles.labelContainer}>
+                <Text
+                  style={[
+                    styles.label,
+                    currentPosition > index && styles.finishedLabel,
+                    currentPosition === index && styles.currentLabel,
+                  ]}
+                >
+                  {currentPosition === index-1 ? label:  ""}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-    </ScrollView>
-  </View>
-);
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -76,6 +94,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     marginTop: 10,
+    marginLeft:-90,
   },
   labelContainer: {
     width: 80, // Set a fixed width for each label container

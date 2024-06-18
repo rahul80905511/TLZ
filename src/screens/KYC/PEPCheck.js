@@ -7,9 +7,14 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  ImageBackground,
+  Dimensions,
 } from 'react-native';
 import { PEPCHECK, storeData } from '../../utils/storage';
+import vectorimg from '../../assests/Vector.png';
+import bell from '../../assests/bell.png';
 
+const {width,height} = Dimensions.get('window')
 const PEPCheck = ({navigation}) => {
   const [answers, setAnswers] = useState([
     {id: 1, text: 'Do you currently hold any public position?', answer: null},
@@ -21,6 +26,7 @@ const PEPCheck = ({navigation}) => {
     {id: 7, text: 'Has there been a conviction against you by a court of law?', answer: null},
     {id: 8, text: 'If you have answered yes to any of the questions above please provide details below?', answer: null},
   ]);
+  
 
   const handleRadioChange = (id, value) => {
     const updatedAnswers = answers.map(item =>
@@ -41,14 +47,18 @@ const PEPCheck = ({navigation}) => {
   return (
     <View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.headerContainer}>
-          <Text style={{fontSize: 20}}>PEP Check</Text>
-          {/* Assuming the bell image path is correct */}
-          <Image
-            source={require('../../assests/bell.png')}
-            style={{position: 'absolute', right: '5%'}}
-          />
-        </View>
+      <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image source={vectorimg} style={styles.bellImage} />
+      </TouchableOpacity>
+
+      <Text style={{fontSize: 20, color: '#3D4C5E'}}>
+        KYC & Compliance
+      </Text>
+      <Image source={bell} style={styles.bellImage} />
+    </View>
+
+
 
         <View style={styles.questionsContainer}>
           {answers.map(item => (
@@ -96,11 +106,16 @@ const PEPCheck = ({navigation}) => {
         </View>
 
         {/* Example of Continue button */}
+      
         <TouchableOpacity
-          style={styles.button}
-          onPress={storePEPCheck}>
-          <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+            style={styles.buttonContainerbtn}
+            onPress={storePEPCheck}>
+            <ImageBackground
+              source={require('../../assests/rectangleButton.png')}
+              style={styles.imageBackground}>
+              <Text style={styles.buttonTextfoot}>Continue</Text>
+            </ImageBackground>
+          </TouchableOpacity>
       </ScrollView>
       {/*<Footer/>*/}
     </View>
@@ -108,18 +123,42 @@ const PEPCheck = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  buttonContainerbtn: {
+    width: width * 0.85,
+    height: height * 0.06,
+    borderRadius: 15,
+    overflow: 'hidden',
+    marginTop: 5,
+    marginBottom: '30%',
+    marginLeft:"2%"
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonTextfoot: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   scrollContainer: {
     flexGrow: 1,
     padding: 20,
+    backgroundColor:"#fff"
   },
   headerContainer: {
+   display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     position: 'relative',
-    top: '6%',
+    top: '1%',
+    width: '100%',
+    alignItems: 'center',
+    marginBottom:'4%'
   },
   questionsContainer: {
-    marginTop: '15%',
+    marginTop: '5%',
     marginLeft: '2%',
   },
   questionItem: {

@@ -9,11 +9,15 @@ import {
   Text,
   View,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import bell from '../assests/bell.png';
 import Stepper from '../utils/Stepper';
 import ImagePickerButton from '../components/ImagePickerButton';
 import axios from 'axios';
+import {storeData} from '../utils/storage';
+import ProgressBar from '../components/ProgressBar';
+import vectorimg from '../assests/Vector.png';
 
 const {width, height} = Dimensions.get('window');
 
@@ -40,7 +44,9 @@ const PassportVerification = ({navigation}) => {
       name: selectedImage.fileName,
       type: selectedImage.type,
     });
-
+    // TODO
+    await storeData('passportFront', selectedImage.uri);
+    await storeData('passportBack', selectedImage2.uri);
     try {
       const response = await axios.post(
         'https://tjz-backend-kyc.onrender.com/api/v1/extractPassportInfo',
@@ -64,18 +70,29 @@ const PassportVerification = ({navigation}) => {
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
         <View style={styles.headerContainer}>
-          <Text style={{fontSize: 16, fontWeight: '400'}}>
-            KYC & Compliance
-          </Text>
-          <Image source={bell} style={{position: 'relative', left: 70}} />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={vectorimg} style={styles.bellImage} />
+          </TouchableOpacity>
+
+          <Text style={{fontSize: 20, color: '#3D4C5E'}}>KYC & Compliance</Text>
+          <Image source={bell} style={styles.bellImage} />
         </View>
+
         <View style={styles.stepperContainer}>
-          <Stepper currentPosition={0} />
+          <Stepper currentPosition={3} />
         </View>
+        <ProgressBar
+          progress={0}
+          label="Progress"
+          height={20}
+          color="#004A70"
+          unfilledColor="#E0E0E0"
+        />
+
         <View style={styles.shareHolderList}>
-          <Text style={{marginLeft: '9%', marginTop: '3%',fontWeight:"bold"}}>
+          <Text style={{marginLeft: '9%', marginTop: '3%', fontWeight: '500',color:"#546881"}}>
             Shareholding Name
           </Text>
           <View style={styles.shareHolderNames}>
@@ -85,13 +102,16 @@ const PassportVerification = ({navigation}) => {
                 marginTop: '0%',
                 marginLeft: '2%',
                 padding: '1%',
+                color:'#a3adbb'
               }}>
               ShareHolder Name
             </Text>
           </View>
         </View>
         <View style={styles.passportContainer}>
-          <Text style={{marginBottom: 15,fontWeight:"bold"}}>Passport Front</Text>
+          <Text style={{marginBottom: 15, fontWeight: '500', color:'#546881'}}>
+            Passport Front
+          </Text>
           <ImagePickerButton onImageSelect={handleImageSelect} />
           <View style={{marginTop: '2%'}}>
             {selectedImage && (
@@ -107,7 +127,9 @@ const PassportVerification = ({navigation}) => {
           </View>
         </View>
         <View style={styles.passportContainer}>
-          <Text style={{marginBottom: 15,fontWeight:"bold"}}>Passport Back</Text>
+          <Text style={{marginBottom: 15, fontWeight: '500',color:'#546881'}}>
+            Passport Back
+          </Text>
           <ImagePickerButton onImageSelect={handleImage2Select} />
           <View style={{marginTop: '3%'}}>
             {selectedImage2 && (
@@ -122,13 +144,18 @@ const PassportVerification = ({navigation}) => {
             )}
           </View>
         </View>
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.buttonContainerbtn}
             onPress={dataExtractionFromPassport}>
-            <Text style={styles.buttonText}>
-              Extract Details From Passport
-            </Text>
+            <ImageBackground
+              source={require('../assests/rectangleButton.png')}
+              style={styles.imageBackground}>
+              <Text style={styles.buttonTextfoot}>
+                Extract Details From Passport
+              </Text>
+            </ImageBackground>
           </TouchableOpacity>
         </View>
 
@@ -144,11 +171,35 @@ const PassportVerification = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
+  buttonContainerbtn: {
+    width: width * 0.79,
+    height: height * 0.06,
+    borderRadius: 15,
+    overflow: 'hidden',
+    marginTop: 5,
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonTextfoot: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+headerContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: '7%',
+    justifyContent: 'space-around',
+    position: 'relative',
+    top: '5%',
+    width: '100%',
+    alignItems: 'center',
+    marginBottom:'4%'
+  },
+  bellImage: {
+    // marginLeft: '8%',
   },
   stepperContainer: {
     marginTop: '3%',
@@ -158,7 +209,8 @@ const styles = StyleSheet.create({
   },
   shareHolderNames: {
     width: '83%',
-    borderColor: '#52ABC7',
+    // height:"20%",
+    borderColor: '#eef0f1',
     borderWidth: 2,
     borderRadius: 5,
     marginLeft: '8%',
