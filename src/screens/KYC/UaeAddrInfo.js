@@ -82,6 +82,7 @@ const UaeAddrInfo = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={addrLine1}
             onChangeText={setAddrLine1}
           />
@@ -92,6 +93,7 @@ const UaeAddrInfo = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={addrLine2}
             onChangeText={setAddrLine2}
           />
@@ -102,6 +104,7 @@ const UaeAddrInfo = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={poBox}
             onChangeText={setPoBox}
           />
@@ -112,6 +115,7 @@ const UaeAddrInfo = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={postalCode}
             onChangeText={setPostalCode}
           />
@@ -122,6 +126,7 @@ const UaeAddrInfo = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={city}
             onChangeText={setCity}
           />
@@ -132,6 +137,7 @@ const UaeAddrInfo = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={stateProvince}
             onChangeText={setStateProvince}
           />
@@ -142,6 +148,7 @@ const UaeAddrInfo = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={country}
             onChangeText={setCountry}
           />

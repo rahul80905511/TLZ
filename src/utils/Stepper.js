@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Dimensions} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 
 const labels = [
@@ -38,14 +38,16 @@ const customStyles = {
   labelColor: 'transparent', // Hide default labels
   labelSize: 0,
   currentStepLabelColor: 'transparent', // Hide default labels
+  separatorMargin: 8, // Adjust the gap between steps
 };
 
 const Stepper = ({currentPosition}) => {
   const scrollViewRef = useRef(null);
+  const screenWidth = Dimensions.get('window').width;
 
   useEffect(() => {
     if (scrollViewRef.current) {
-      const xOffset = currentPosition * 100; // Adjust based on your label width and spacing
+      const xOffset = (currentPosition * 100) - (screenWidth / 2) + 50; // Center the active step
       scrollViewRef.current.scrollTo({x: xOffset, animated: true});
     }
   }, [currentPosition]);
@@ -74,7 +76,7 @@ const Stepper = ({currentPosition}) => {
                     currentPosition === index && styles.currentLabel,
                   ]}
                 >
-                  {currentPosition === index-1 ? label:  ""}
+                  {currentPosition === index ? label : ""}
                 </Text>
               </View>
             ))}
@@ -94,7 +96,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     marginTop: 10,
-    marginLeft:-90,
   },
   labelContainer: {
     width: 80, // Set a fixed width for each label container

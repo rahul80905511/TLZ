@@ -76,14 +76,14 @@ const PersonalDetails = ({navigation}) => {
           <Stepper currentPosition={3} />
         </View>
         <View style={{width: '100%'}}>
-        <ProgressBar
-          progress={0.18}
-          label="Progress"
-          height={20}
-          color="#004A70"
-          unfilledColor="#E0E0E0"
-        />
-      </View>
+          <ProgressBar
+            progress={0.18}
+            label="Progress"
+            height={20}
+            color="#004A70"
+            unfilledColor="#E0E0E0"
+          />
+        </View>
         <View style={{marginLeft: '11%', marginTop: '1%'}}>
           <Text style={{fontSize: 18, fontWeight: '500', color: '#1D242D'}}>
             Personal Details
@@ -95,6 +95,7 @@ const PersonalDetails = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={firstName}
             onChangeText={setFirstName}
           />
@@ -105,6 +106,7 @@ const PersonalDetails = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={middleName}
             onChangeText={setMiddleName}
           />
@@ -115,6 +117,7 @@ const PersonalDetails = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={lastName}
             onChangeText={setLastName}
           />
@@ -125,6 +128,7 @@ const PersonalDetails = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={gender}
             onChangeText={setGender}
           />
@@ -135,6 +139,7 @@ const PersonalDetails = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="DD/MM/YYYY"
+            placeholderTextColor="#909DAD"
             value={dob}
             onChangeText={setDob}
           />
@@ -145,6 +150,7 @@ const PersonalDetails = ({navigation}) => {
           <TextInput
             style={styles.input}
             placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={currentNationality}
             onChangeText={setCurrentNationality}
           />
@@ -225,7 +231,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: '4%',
     width: '90%',
-    color:'#546881'
+    color: '#546881',
   },
   button: {
     backgroundColor: '#074E76',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,10 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import Footer from '../../components/Footer';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const tasks = [
   {
     name: 'Package Confirmation',
@@ -35,7 +35,7 @@ const tasks = [
     progress: 0,
     link: 'passportVerification',
   },
- 
+
   {
     name: 'Trade Licence Application',
     progress: 60,
@@ -61,7 +61,7 @@ const tasks = [
     progress: 30,
     link: '',
   },
- 
+
   {
     name: 'Emirates ID Applications',
     progress: 30,
@@ -75,21 +75,21 @@ const tasks = [
 ];
 
 const taskImages = {
-    'Package Confirmation': require('../../assests/package.png'),
-    'Financial Confirmation': require('../../assests/buisness.png'),
-    'My Company Details': require('../../assests/buisness.png'),
-    'KYC & Compliance': require('../../assests/kyc.png'),
-    'Payment': require('../../assests/payment.png'),
-    'Trade Licence Application': require('../../assests/payment.png'),
-    'Registration ID Card Application': require('../../assests/entity.png'),
-    'Immigration & Residency': require('../../assests/trade.png'),
-    'Entity Permit': require('../../assests/visa.png'),
-    'Medical Testing': require('../../assests/visa.png'),
-    'Emirates ID Applications': require('../../assests/visa.png'),
-    'Bank Account Opening': require('../../assests/visa.png'),
-  };
-  
-const ApplicationJourney = ({ navigation }) => {
+  'Package Confirmation': require('../../assests/package.png'),
+  'Financial Confirmation': require('../../assests/buisness.png'),
+  'My Company Details': require('../../assests/buisness.png'),
+  'KYC & Compliance': require('../../assests/kyc.png'),
+  Payment: require('../../assests/payment.png'),
+  'Trade Licence Application': require('../../assests/payment.png'),
+  'Registration ID Card Application': require('../../assests/entity.png'),
+  'Immigration & Residency': require('../../assests/trade.png'),
+  'Entity Permit': require('../../assests/visa.png'),
+  'Medical Testing': require('../../assests/visa.png'),
+  'Emirates ID Applications': require('../../assests/visa.png'),
+  'Bank Account Opening': require('../../assests/visa.png'),
+};
+
+const ApplicationJourney = ({navigation}) => {
   const [startAnimation, setStartAnimation] = useState(false);
 
   useEffect(() => {
@@ -157,10 +157,7 @@ const ApplicationJourney = ({ navigation }) => {
             onPress={() => navigation.navigate(task.link)}>
             <View style={styles.column}>
               <View style={styles.imageprogress}>
-                <Image
-                source={taskImages[task.name]}
-                  style={styles.imagepro}
-                />
+                <Image source={taskImages[task.name]} style={styles.imagepro} />
               </View>
               <View style={styles.imageprogress}>
                 <Text style={styles.taskTitle}>{task.name}</Text>
@@ -281,7 +278,7 @@ const styles = StyleSheet.create({
   nextStepsButton: {
     marginTop: 10,
     backgroundColor: '#fff',
-    padding: 10,
+    padding: "5%",
     borderRadius: 8,
     width: '60%',
   },
@@ -318,7 +315,7 @@ const styles = StyleSheet.create({
   taskProgressText: {
     fontSize: 8,
     fontWeight: 'bold',
-    color:"#397191"
+    color: '#397191',
   },
   footerbutton: {
     marginBottom: 100,

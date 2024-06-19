@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -20,9 +20,9 @@ import vectorimg from '../../assests/Vector.png';
 import Footer from '../../components/Footer';
 import ProgressBar from '../../components/ProgressBar';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const PhotoVerifyScreen = ({ navigation }) => {
+const PhotoVerifyScreen = ({navigation}) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImage2, setSelectedImage2] = useState(null);
   const [selectedImage3, setSelectedImage3] = useState(null);
@@ -31,15 +31,15 @@ const PhotoVerifyScreen = ({ navigation }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-  const handleImageSelect = (imageUri) => {
+  const handleImageSelect = imageUri => {
     setSelectedImage(imageUri);
   };
 
-  const handleImage2Select = (imageUri) => {
+  const handleImage2Select = imageUri => {
     setSelectedImage2(imageUri);
   };
 
-  const handleImage3Select = (imageUri) => {
+  const handleImage3Select = imageUri => {
     setSelectedImage3(imageUri);
   };
 
@@ -91,15 +91,15 @@ const PhotoVerifyScreen = ({ navigation }) => {
       );
 
       setPassportData(response.data);
-     
+
       setIsLoading(false); // Hide loader after data is fetched
       if (response.data.status === true) {
         showSuccessModal(); // Call showSuccessModal if status is true
         navigation.navigate('eSignScreen');
-    } else {
+      } else {
         showErrorModal(); // Call showErrorModal otherwise
-    }
- 
+      }
+
       // navigation.navigate('passport');
     } catch (error) {
       console.error('Error extracting passport info:', error);
@@ -110,128 +110,131 @@ const PhotoVerifyScreen = ({ navigation }) => {
 
   return (
     <View>
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={{ flex: 1,backgroundColor:'#fff' }}>
-      <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image source={vectorimg} style={styles.bellImage} />
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <View style={{flex: 1, backgroundColor: '#fff'}}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image source={vectorimg} style={styles.bellImage} />
+            </TouchableOpacity>
 
-      <Text style={{fontSize: 20, color: '#3D4C5E'}}>
-        KYC & Compliance
-      </Text>
-      <Image source={bell} style={styles.bellImage} />
-    </View>
-        <View style={styles.stepperContainer}>
-          <Stepper currentPosition={3} />
-        </View>
-        <View style={{width: '100%'}}>
-        <ProgressBar
-          progress={0.81}
-          label="Progress"
-          height={20}
-          color="#004A70"
-          unfilledColor="#E0E0E0"
-        />
-      </View>
-        <View style={styles.passportContainer}>
-          <Text style={{ marginBottom: 15, fontWeight: 'bold' ,color:'#546881'}}>
-            Identity Proof
-          </Text>
-          <ImagePickerButton onImageSelect={handleImageSelect} />
-          <View style={{ marginTop: '2%' }}>
-            {selectedImage && (
-              <Image
-                source={{ uri: selectedImage.uri }}
-                style={{
-                  width: width * 0.83,
-                  height: 178,
-                  position: 'relative',
-                }}
-              />
-            )}
+            <Text style={{fontSize: 20, color: '#3D4C5E'}}>
+              KYC & Compliance
+            </Text>
+            <Image source={bell} style={styles.bellImage} />
           </View>
-        </View>
-        <View style={styles.passportContainer}>
-          <Text style={{ marginBottom: 15, fontWeight: 'bold' ,color:'#546881'}}>
-            Capture Your Live Photo
-          </Text>
-          <ImagePicker
-            imagePickerCallback={handleImage2Select}
-            captureImage={handleImage2Select}
-          />
-          <View style={{ marginTop: '3%' }}>
-            {selectedImage2 && (
-              <Image
-                source={{ uri: selectedImage2.uri }}
-                style={{
-                  width: width * 0.83,
-                  height: 178,
-                  position: 'relative',
-                  resizeMode: 'contain',
-                }}
-              />
-            )}
+          <View style={styles.stepperContainer}>
+            <Stepper currentPosition={3} />
           </View>
-        </View>
-        <View style={styles.passportContainer}>
-          <Text style={{ marginBottom: 15, fontWeight: 'bold',color:'#546881' }}>
-            Capture Your Live Photo
-          </Text>
-          <ImagePicker
-            imagePickerCallback={handleImage3Select}
-            captureImage={handleImage3Select}
-          />
-          <View style={{ marginTop: '3%' }}>
-            {selectedImage3 && (
-              <Image
-                source={{ uri: selectedImage3.uri }}
-                style={{
-                  width: width * 0.83,
-                  height: 178,
-                  position: 'relative',
-                  resizeMode: 'contain',
-                }}
-              />
-            )}
+          <View style={{width: '100%'}}>
+            <ProgressBar
+              progress={0.81}
+              label="Progress"
+              height={20}
+              color="#004A70"
+              unfilledColor="#E0E0E0"
+            />
           </View>
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={verify}>
-            <Text style={styles.buttonText}>Verify</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Loader */}
-        {isLoading && (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        )}
-
-        {/* Modal for success or error */}
-        <Modal
-          visible={showModal}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={closeModal}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalText}>{modalMessage}</Text>
-              <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
-                <Text style={styles.modalButtonText}>OK</Text>
-              </TouchableOpacity>
+          <View style={styles.passportContainer}>
+            <Text
+              style={{marginBottom: 15, fontWeight: 'bold', color: '#546881'}}>
+              Identity Proof
+            </Text>
+            <ImagePickerButton onImageSelect={handleImageSelect} />
+            <View style={{marginTop: '2%'}}>
+              {selectedImage && (
+                <Image
+                  source={{uri: selectedImage.uri}}
+                  style={{
+                    width: width * 0.83,
+                    height: 178,
+                    position: 'relative',
+                  }}
+                />
+              )}
             </View>
           </View>
-        </Modal>
+          <View style={styles.passportContainer}>
+            <Text
+              style={{marginBottom: 15, fontWeight: 'bold', color: '#546881'}}>
+              Capture Your Live Photo
+            </Text>
+            <ImagePicker
+              imagePickerCallback={handleImage2Select}
+              captureImage={handleImage2Select}
+            />
+            <View style={{marginTop: '3%'}}>
+              {selectedImage2 && (
+                <Image
+                  source={{uri: selectedImage2.uri}}
+                  style={{
+                    width: width * 0.83,
+                    height: 178,
+                    position: 'relative',
+                    resizeMode: 'contain',
+                  }}
+                />
+              )}
+            </View>
+          </View>
+          <View style={styles.passportContainer}>
+            <Text
+              style={{marginBottom: 15, fontWeight: 'bold', color: '#546881'}}>
+              Capture Your Live Photo
+            </Text>
+            <ImagePicker
+              imagePickerCallback={handleImage3Select}
+              captureImage={handleImage3Select}
+            />
+            <View style={{marginTop: '3%'}}>
+              {selectedImage3 && (
+                <Image
+                  source={{uri: selectedImage3.uri}}
+                  style={{
+                    width: width * 0.83,
+                    height: 178,
+                    position: 'relative',
+                    resizeMode: 'contain',
+                  }}
+                />
+              )}
+            </View>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={verify}>
+              <Text style={styles.buttonText}>Verify</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Loader */}
+          {isLoading && (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          )}
+
+          {/* Modal for success or error */}
+          <Modal
+            visible={showModal}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={closeModal}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalText}>{modalMessage}</Text>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={closeModal}>
+                  <Text style={styles.modalButtonText}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </ScrollView>
+      <View>
+        <Footer />
       </View>
-      
-    </ScrollView>
-    <View >
-       <Footer/>
-      </View>
-      </View>
+    </View>
   );
 };
 
@@ -244,7 +247,7 @@ const styles = StyleSheet.create({
     top: '4%',
     width: '100%',
     alignItems: 'center',
-    marginBottom:'5%'
+    marginBottom: '5%',
   },
   stepperContainer: {
     marginTop: '3%',
@@ -252,12 +255,12 @@ const styles = StyleSheet.create({
   passportContainer: {
     marginTop: '8%',
     marginLeft: '8%',
-    marginBottom:"3%"
+    marginBottom: '3%',
   },
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: "26%",
+    marginBottom: '26%',
   },
   button: {
     backgroundColor: '#074E76',
@@ -297,6 +300,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center',
+    color:'#909dad'
   },
   modalButton: {
     backgroundColor: '#074E76',

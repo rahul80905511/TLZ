@@ -1,57 +1,71 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TextInput, ScrollView, TouchableOpacity, Alert, ImageBackground, Dimensions } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TextInput,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  ImageBackground,
+  Dimensions,
+} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import bell from '../../assests/bell.png'; // Make sure this path is correct
 import Stepper from '../../utils/Stepper';
 import Footer from '../../components/Footer';
-import { MARITIALINFO, storeData } from '../../utils/storage';
+import {MARITIALINFO, storeData} from '../../utils/storage';
 import vectorimg from '../../assests/Vector.png';
 import ProgressBar from '../../components/ProgressBar';
 const {width, height} = Dimensions.get('window');
 
-const MaritalInfo = ({ navigation }) => {
+const MaritalInfo = ({navigation}) => {
   const [maritalStatus, setMaritalStatus] = useState('');
   const [spouseName, setSpouseName] = useState('');
   const [spouseNationality, setSpouseNationality] = useState('');
   const [spouseDob, setSpouseDob] = useState('');
 
-  const saveMaritalInfo = function() {
-    storeData(MARITIALINFO,{
-        maritalStatus,spouseName,spouseNationality,spouseDob
-    }).then(() => {
-        navigation.navigate('familyBackground');
-    }).catch((err)=>{
-      Alert.alert("Error","Something went wrong");
+  const saveMaritalInfo = function () {
+    storeData(MARITIALINFO, {
+      maritalStatus,
+      spouseName,
+      spouseNationality,
+      spouseDob,
     })
-  }
+      .then(() => {
+        navigation.navigate('familyBackground');
+      })
+      .catch(err => {
+        Alert.alert('Error', 'Something went wrong');
+      });
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image source={vectorimg} style={styles.bellImage} />
-      </TouchableOpacity>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={vectorimg} style={styles.bellImage} />
+          </TouchableOpacity>
 
-      <Text style={{fontSize: 20, color: '#3D4C5E'}}>
-        KYC & Compliance
-      </Text>
-      <Image source={bell} style={styles.bellImage} />
-    </View>
-        <View style={{ marginTop: '10%' }}>
+          <Text style={{fontSize: 20, color: '#3D4C5E'}}>KYC & Compliance</Text>
+          <Image source={bell} style={styles.bellImage} />
+        </View>
+        <View style={{marginTop: '10%'}}>
           <Stepper currentPosition={3} />
         </View>
         <View style={{width: '100%'}}>
-        <ProgressBar
-          progress={0.54}
-          label="Progress"
-          height={20}
-          color="#004A70"
-          unfilledColor="#E0E0E0"
-        />
-      </View>
-        <View style={{ marginLeft: '11%', marginTop: '5%' }}>
-          <Text style={{ fontSize: 18, fontWeight: '500', color: '#1D242D' }}>
+          <ProgressBar
+            progress={0.54}
+            label="Progress"
+            height={20}
+            color="#004A70"
+            unfilledColor="#E0E0E0"
+          />
+        </View>
+        <View style={{marginLeft: '11%', marginTop: '5%'}}>
+          <Text style={{fontSize: 18, fontWeight: '500', color: '#1D242D'}}>
             Marital Information
           </Text>
         </View>
@@ -61,14 +75,33 @@ const MaritalInfo = ({ navigation }) => {
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={maritalStatus}
-              onValueChange={(itemValue) => setMaritalStatus(itemValue)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Select Marital Status" value="" />
-              <Picker.Item label="Single" value="single" />
-              <Picker.Item label="Married" value="married" />
-              <Picker.Item label="Divorced" value="divorced" />
-              <Picker.Item label="Widowed" value="widowed" />
+              onValueChange={itemValue => setMaritalStatus(itemValue)}
+              style={styles.picker}>
+              <Picker.Item
+                label="Select Marital Status"
+                value=""
+                style={{color: '#909dad'}}
+              />
+              <Picker.Item
+                label="Single"
+                value="single"
+                style={{color: '#909dad'}}
+              />
+              <Picker.Item
+                label="Married"
+                value="married"
+                style={{color: '#909dad'}}
+              />
+              <Picker.Item
+                label="Divorced"
+                value="divorced"
+                style={{color: '#909dad'}}
+              />
+              <Picker.Item
+                label="Widowed"
+                value="widowed"
+                style={{color: '#909dad'}}
+              />
             </Picker>
           </View>
         </View>
@@ -77,7 +110,8 @@ const MaritalInfo = ({ navigation }) => {
           <Text style={styles.inputLabel}>Spouse Name</Text>
           <TextInput
             style={styles.input}
-            placeholder='Type here'
+            placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={spouseName}
             onChangeText={setSpouseName}
           />
@@ -87,7 +121,8 @@ const MaritalInfo = ({ navigation }) => {
           <Text style={styles.inputLabel}>Spouse Nationality</Text>
           <TextInput
             style={styles.input}
-            placeholder='Type here'
+            placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={spouseNationality}
             onChangeText={setSpouseNationality}
           />
@@ -97,36 +132,36 @@ const MaritalInfo = ({ navigation }) => {
           <Text style={styles.inputLabel}>Spouse DOB</Text>
           <TextInput
             style={styles.input}
-            placeholder='Type here'
+            placeholder="Type here"
+            placeholderTextColor="#909DAD"
             value={spouseDob}
             onChangeText={setSpouseDob}
           />
         </View>
 
-       
         <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.buttonContainerbtn}
-          onPress={saveMaritalInfo}>
-          <ImageBackground
-            source={require('../../assests/rectangleButton.png')}
-            style={styles.imageBackground}>
-            <Text style={styles.buttonTextfoot}>Continue</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={styles.buttonContainerbtn}
+            onPress={saveMaritalInfo}>
+            <ImageBackground
+              source={require('../../assests/rectangleButton.png')}
+              style={styles.imageBackground}>
+              <Text style={styles.buttonTextfoot}>Continue</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
       <Footer navigation={navigation} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"#fff",
+    backgroundColor: '#fff',
   },
- 
+
   buttonContainer: {
     marginTop: '3%',
     justifyContent: 'center',
@@ -182,7 +217,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: '4%',
     width: '90%',
-    color:'#546881'
+    color: '#546881',
   },
   pickerContainer: {
     backgroundColor: '#eef0f1',
