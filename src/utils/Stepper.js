@@ -1,13 +1,13 @@
-import React, {useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, ScrollView, Dimensions} from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 
 const labels = [
   'Applications ',
   'Applications 1',
   'Applications 2',
-  'Applications 3',
   'KYC & Compliance',
+  'Applications 3',
   'Applications 5',
   'Applications 6',
   'Applications 7',
@@ -16,6 +16,7 @@ const labels = [
   'Applications 10',
   'Applications 11',
 ];
+
 const customStyles = {
   stepIndicatorSize: 20,
   currentStepIndicatorSize: 30,
@@ -38,27 +39,24 @@ const customStyles = {
   labelColor: 'transparent', // Hide default labels
   labelSize: 0,
   currentStepLabelColor: 'transparent', // Hide default labels
-  separatorMargin: 8, // Adjust the gap between steps
+  separatorMargin: 4, // Adjust the gap between steps
 };
 
-const Stepper = ({currentPosition}) => {
+const Stepper = ({ currentPosition }) => {
   const scrollViewRef = useRef(null);
   const screenWidth = Dimensions.get('window').width;
 
   useEffect(() => {
     if (scrollViewRef.current) {
-      const xOffset = (currentPosition * 100) - (screenWidth / 2) + 50; // Center the active step
-      scrollViewRef.current.scrollTo({x: xOffset, animated: true});
+      const stepWidth = 100; // Adjust according to your label container width
+      const xOffset = (currentPosition - 1) * stepWidth - screenWidth / 2 + stepWidth / 2;
+      scrollViewRef.current.scrollTo({ x: xOffset, animated: true });
     }
   }, [currentPosition]);
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        ref={scrollViewRef}
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} ref={scrollViewRef}>
         <View>
           <StepIndicator
             customStyles={customStyles}
@@ -89,16 +87,17 @@ const Stepper = ({currentPosition}) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
+    marginTop: 10,
+    marginBottom:0
   },
   labelsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10, // Adjust horizontal padding
     marginTop: 10,
   },
   labelContainer: {
-    width: 80, // Set a fixed width for each label container
+    width: 60, // Adjust the width of each label container
     alignItems: 'center',
   },
   label: {

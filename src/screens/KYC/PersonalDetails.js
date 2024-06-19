@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,6 +10,8 @@ import {
   Alert,
   ImageBackground,
   Dimensions,
+  Keyboard,
+  Platform,
 } from 'react-native';
 import bell from '../../assests/bell.png'; // Make sure this path is correct
 import Stepper from '../../utils/Stepper';
@@ -22,16 +24,21 @@ import {
   storeData,
 } from '../../utils/storage';
 import ProgressBar from '../../components/ProgressBar';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAvoidingView } from 'react-native';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const PersonalDetails = ({navigation}) => {
+const PersonalDetails = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [currentNationality, setCurrentNationality] = useState('');
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const refs = useRef([]);
 
   const savePersonalInfo = function () {
     storeData(PERSONALDETAILS, {
@@ -51,6 +58,26 @@ const PersonalDetails = ({navigation}) => {
   };
 
   useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => {
+        setKeyboardOpen(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
     getData(PASSPORTDATAKEY).then(data => {
       setFirstName(data.given_name);
       setMiddleName(data.middle_name);
@@ -61,21 +88,31 @@ const PersonalDetails = ({navigation}) => {
     });
   }, []);
 
+  const focusNextField = (index) => {
+    if (index < refs.current.length - 1) {
+      refs.current[index + 1].focus();
+    }
+  };
+
   return (
-    <View style={{backgroundColor: '#fff'}}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: '#fff' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={vectorimg} style={styles.bellImage} />
           </TouchableOpacity>
 
-          <Text style={{fontSize: 20, color: '#3D4C5E'}}>KYC & Compliance</Text>
+          <Text style={{ fontSize: 20, color: '#3D4C5E' }}>KYC & Compliance</Text>
           <Image source={bell} style={styles.bellImage} />
         </View>
-        <View style={{marginTop: '10%'}}>
+        <View style={{ marginTop: '10%' }}>
           <Stepper currentPosition={3} />
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{ width: width }}>
           <ProgressBar
             progress={0.18}
             label="Progress"
@@ -84,8 +121,8 @@ const PersonalDetails = ({navigation}) => {
             unfilledColor="#E0E0E0"
           />
         </View>
-        <View style={{marginLeft: '11%', marginTop: '1%'}}>
-          <Text style={{fontSize: 18, fontWeight: '500', color: '#1D242D'}}>
+        <View style={{ marginLeft: '5%', marginTop: '-2%' }}>
+          <Text style={{ fontSize: 18, fontWeight: '500', color: '#1D242D' }}>
             Personal Details
           </Text>
         </View>
@@ -98,6 +135,9 @@ const PersonalDetails = ({navigation}) => {
             placeholderTextColor="#909DAD"
             value={firstName}
             onChangeText={setFirstName}
+            ref={(el) => (refs.current[0] = el)}
+            onSubmitEditing={() => focusNextField(0)}
+            returnKeyType="next"
           />
         </View>
 
@@ -109,6 +149,9 @@ const PersonalDetails = ({navigation}) => {
             placeholderTextColor="#909DAD"
             value={middleName}
             onChangeText={setMiddleName}
+            ref={(el) => (refs.current[1] = el)}
+            onSubmitEditing={() => focusNextField(1)}
+            returnKeyType="next"
           />
         </View>
 
@@ -120,6 +163,9 @@ const PersonalDetails = ({navigation}) => {
             placeholderTextColor="#909DAD"
             value={lastName}
             onChangeText={setLastName}
+            ref={(el) => (refs.current[2] = el)}
+            onSubmitEditing={() => focusNextField(2)}
+            returnKeyType="next"
           />
         </View>
 
@@ -131,6 +177,9 @@ const PersonalDetails = ({navigation}) => {
             placeholderTextColor="#909DAD"
             value={gender}
             onChangeText={setGender}
+            ref={(el) => (refs.current[3] = el)}
+            onSubmitEditing={() => focusNextField(3)}
+            returnKeyType="next"
           />
         </View>
 
@@ -142,6 +191,9 @@ const PersonalDetails = ({navigation}) => {
             placeholderTextColor="#909DAD"
             value={dob}
             onChangeText={setDob}
+            ref={(el) => (refs.current[4] = el)}
+            onSubmitEditing={() => focusNextField(4)}
+            returnKeyType="next"
           />
         </View>
 
@@ -153,23 +205,28 @@ const PersonalDetails = ({navigation}) => {
             placeholderTextColor="#909DAD"
             value={currentNationality}
             onChangeText={setCurrentNationality}
+            ref={(el) => (refs.current[5] = el)}
+            onSubmitEditing={() => focusNextField(5)}
+            returnKeyType="done"
           />
         </View>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.buttonContainerbtn}
-            onPress={savePersonalInfo}>
+            onPress={savePersonalInfo}
+          >
             <ImageBackground
               source={require('../../assests/rectangleButton.png')}
-              style={styles.imageBackground}>
+              style={styles.imageBackground}
+            >
               <Text style={styles.buttonTextfoot}>Continue</Text>
             </ImageBackground>
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <Footer />
-    </View>
+      {!keyboardOpen && <Footer />}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -180,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainerbtn: {
-    width: width * 0.79,
+    width: width * 0.86,
     height: height * 0.06,
     borderRadius: 15,
     overflow: 'hidden',
@@ -214,8 +271,9 @@ const styles = StyleSheet.create({
     // marginLeft: '8%',
   },
   inputContainer: {
-    marginLeft: '11%',
-    marginTop: '3%',
+    width: '100%',
+    marginLeft: '5%',
+    marginTop: '2%',
   },
   inputLabel: {
     color: '#546881',
@@ -229,24 +287,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingLeft: 12,
     borderRadius: 8,
-    marginTop: '4%',
+    marginTop: '2%',
     width: '90%',
     color: '#546881',
-  },
-  button: {
-    backgroundColor: '#074E76',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 20,
-    marginLeft: '11%',
-    width: '80%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '500',
   },
 });
 

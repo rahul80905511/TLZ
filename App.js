@@ -27,6 +27,8 @@ import { PEPCHECK } from './src/utils/storage';
 import PEPCheck from './src/screens/KYC/PEPCheck';
 import MainDashBoard from './src/screens/Dashboard/MainDashBoard';
 import DocumentVault from './src/screens/Dashboard/DocumentVault';
+import TermAndConditionsScreen from './src/screens/Dashboard/TermAndConditionsScreen';
+import TermsAndConditions2 from './src/screens/Dashboard/TermsAndConditions2';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -48,6 +50,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+  
         <Stack.Screen
           name="login"
           component={LoginScreen}
@@ -98,6 +101,16 @@ const App = () => {
       component={ESignScreen}
       options={{headerShown: false}}
     />
+    <Stack.Screen
+    name="term"
+    component={TermAndConditionsScreen}
+    options={{headerShown: false}}
+  />
+  <Stack.Screen
+  name="term2"
+  component={TermsAndConditions2}
+  options={{headerShown: false}}
+/>
     <Stack.Screen
 name="pepCheck"
 component={PEPCheck}

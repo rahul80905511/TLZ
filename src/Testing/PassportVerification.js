@@ -83,6 +83,8 @@ const PassportVerification = ({navigation}) => {
         <View style={styles.stepperContainer}>
           <Stepper currentPosition={3} />
         </View>
+        <View>
+        
         <ProgressBar
           progress={0}
           label="Progress"
@@ -90,9 +92,10 @@ const PassportVerification = ({navigation}) => {
           color="#004A70"
           unfilledColor="#E0E0E0"
         />
+        </View>
 
         <View style={styles.shareHolderList}>
-          <Text style={{marginLeft: '9%', marginTop: '3%', fontWeight: '500',color:"#546881"}}>
+          <Text style={{marginLeft: '9%', marginTop: '-2%', fontWeight: '500',color:"#546881"}}>
             Shareholding Name
           </Text>
           <View style={styles.shareHolderNames}>

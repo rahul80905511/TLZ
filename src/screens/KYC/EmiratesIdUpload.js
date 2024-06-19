@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,51 +9,84 @@ import {
   TouchableOpacity,
   Alert,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
 } from 'react-native';
 import bell from '../../assests/bell.png'; // Make sure this path is correct
 import Stepper from '../../utils/Stepper';
 import Footer from '../../components/Footer';
 import ImagePicker from '../../components/ImagePickerButton';
-import {EMIRATESDATA, storeData} from '../../utils/storage';
-import {Dimensions} from 'react-native';
+import { EMIRATESDATA, storeData } from '../../utils/storage';
+import { Dimensions } from 'react-native';
 import vectorimg from '../../assests/Vector.png';
 import ProgressBar from '../../components/ProgressBar';
-const {width, height} = Dimensions.get('window');
 
-const EmiratesIdUpload = ({navigation}) => {
+const { width, height } = Dimensions.get('window');
+
+const EmiratesIdUpload = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [emiratesExpiryDate, setemiratesExpiryDate] = useState('');
-  const [emiratesIssueDate, setemiratesIssueDate] = useState('');
-  const [emiratesId, setemiratesId] = useState('');
+  const [emiratesExpiryDate, setEmiratesExpiryDate] = useState('');
+  const [emiratesIssueDate, setEmiratesIssueDate] = useState('');
+  const [emiratesId, setEmiratesId] = useState('');
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const handleImageSelect = imageUri => {
+  // Refs for focusing next TextInput
+  const emiratesIssueDateRef = useRef(null);
+  const emiratesExpiryDateRef = useRef(null);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => {
+        setKeyboardOpen(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const handleImageSelect = (imageUri) => {
     setSelectedImage(imageUri);
   };
 
   const storeEmiratesData = () => {
-    storeData(EMIRATESDATA, {emiratesId, emiratesIssueDate, emiratesExpiryDate})
+    storeData(EMIRATESDATA, { emiratesId, emiratesIssueDate, emiratesExpiryDate })
       .then(() => {
-        navigation.navigate('photoVerifyScreen');
+        navigation.navigate('eSignScreen');
       })
-      .catch(error => {
+      .catch((error) => {
         Alert.alert('Error', 'Something went wrong');
       });
   };
+
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: '#fff' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={vectorimg} style={styles.bellImage} />
           </TouchableOpacity>
-
-          <Text style={{fontSize: 20, color: '#3D4C5E'}}>KYC & Compliance</Text>
+          <Text style={{ fontSize: 20, color: '#3D4C5E' }}>KYC & Compliance</Text>
           <Image source={bell} style={styles.bellImage} />
         </View>
-        <View style={{marginTop: '10%'}}>
+        <View style={{ marginTop: '10%' }}>
           <Stepper currentPosition={3} />
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <ProgressBar
             progress={0.72}
             label="Progress"
@@ -62,6 +95,8 @@ const EmiratesIdUpload = ({navigation}) => {
             unfilledColor="#E0E0E0"
           />
         </View>
+        <View style={{marginTop:'-10%'}}>
+        
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Emirates ID</Text>
           <TextInput
@@ -69,32 +104,38 @@ const EmiratesIdUpload = ({navigation}) => {
             placeholder="Type here"
             placeholderTextColor="#909DAD"
             value={emiratesId}
-            onChangeText={setemiratesId}
+            onChangeText={setEmiratesId}
+            onSubmitEditing={() => emiratesIssueDateRef.current.focus()}
           />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Issue Date</Text>
           <TextInput
+            ref={emiratesIssueDateRef}
             style={styles.input}
             placeholder="Type here"
             placeholderTextColor="#909DAD"
             value={emiratesIssueDate}
-            onChangeText={setemiratesIssueDate}
+            onChangeText={setEmiratesIssueDate}
+            onSubmitEditing={() => emiratesExpiryDateRef.current.focus()}
           />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Expiry Date</Text>
           <TextInput
+            ref={emiratesExpiryDateRef}
             style={styles.input}
             placeholder="Type here"
             placeholderTextColor="#909DAD"
             value={emiratesExpiryDate}
-            onChangeText={setemiratesExpiryDate}
+            onChangeText={setEmiratesExpiryDate}
+            onSubmitEditing={Keyboard.dismiss} // Dismiss keyboard after last input
           />
         </View>
+        </View>
 
-        <View style={{marginLeft: '11%', marginTop: '5%'}}>
-          <Text style={{fontSize: 18, fontWeight: '500', color: '#1D242D'}}>
+        <View style={{ marginLeft: '5%', marginTop: '5%' }}>
+          <Text style={{ fontSize: 18, fontWeight: '500', color: '#1D242D' }}>
             Upload Emirates Id
           </Text>
         </View>
@@ -121,8 +162,8 @@ const EmiratesIdUpload = ({navigation}) => {
           }}>
           {selectedImage && (
             <Image
-              source={{uri: selectedImage.uri}}
-              style={{width: 200, height: 200}}
+              source={{ uri: selectedImage.uri }}
+              style={{ width: 200, height: 200 }}
             />
           )}
         </View>
@@ -139,10 +180,12 @@ const EmiratesIdUpload = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <View style={{position: 'relative', bottom: 0, width: '100%'}}>
-        <Footer navigation={navigation} />
-      </View>
-    </View>
+      {!keyboardOpen && (
+        <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+          <Footer navigation={navigation} />
+        </View>
+      )}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -153,7 +196,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainerbtn: {
-    width: width * 0.79,
+    width: width * 0.85,
     height: height * 0.06,
     borderRadius: 15,
     overflow: 'hidden',
@@ -184,7 +227,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputContainer: {
-    marginLeft: '11%',
+    width:'100%',
+    marginLeft: '5%',
     marginTop: '7%',
   },
   inputLabel: {
@@ -193,7 +237,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   uploadContainer: {
-    marginLeft: '8%',
+    marginLeft: '5.5%',
     marginTop: '5%',
   },
   button: {
@@ -211,15 +255,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '500',
-  },
-  inputContainer: {
-    marginLeft: '11%',
-    marginTop: '7%',
-  },
-  inputLabel: {
-    color: '#546881',
-    fontWeight: '500',
-    fontSize: 16,
   },
   input: {
     backgroundColor: '#eef0f1',

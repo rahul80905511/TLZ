@@ -322,9 +322,7 @@ const KYCSuccessScreen = ({navigation}) => {
           </Text>
           <Image source={bell} style={{position: 'relative', left: 70}} />
         </View>
-        <View style={styles.stepperContainer}>
-          <Stepper currentPosition={4} />
-        </View>
+      
 
         <View style={styles.passportContainer}>
           <View style={styles.headerContainer}>

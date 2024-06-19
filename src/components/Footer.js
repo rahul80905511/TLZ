@@ -31,19 +31,19 @@ const styles = StyleSheet.create({
     borderTopColor: '#ccc',
   },
   icon: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     // add more styles as needed
   },
   iconcir: {
-    width: 30,
-    height: 30,
+    width: 21,
+    height: 21,
     // add more styles as needed
   },
   circularbtn: {
     backgroundColor: '#074E76',
     borderRadius: 50,
-    marginBottom: 50,
+    marginBottom: 33,
     padding: 20,
   },
 });

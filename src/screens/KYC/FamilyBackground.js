@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,23 +10,33 @@ import {
   Alert,
   Dimensions,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
 } from 'react-native';
-import bell from '../../assests/bell.png'; // Make sure this path is correct
+import bell from '../../assests/bell.png';
 import Stepper from '../../utils/Stepper';
 import Footer from '../../components/Footer';
-import {FAMILYINFO, storeData} from '../../utils/storage';
+import { FAMILYINFO, storeData } from '../../utils/storage';
 import vectorimg from '../../assests/Vector.png';
 import ProgressBar from '../../components/ProgressBar';
-const {width, height} = Dimensions.get('window');
 
-const FamilyBackground = ({navigation}) => {
+const { width, height } = Dimensions.get('window');
+
+const FamilyBackground = ({ navigation }) => {
   const [mothersname, setMothersName] = useState('');
   const [mothersnationality, setMothersNationality] = useState('');
   const [fathersname, setFatherName] = useState('');
   const [fathersnationality, setFathersNationality] = useState('');
   const [isUAEResident, setIsUAEResident] = useState(null);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const saveFamilyInfo = function () {
+  // Refs for focusing next TextInput
+  const mothersNationalityRef = useRef(null);
+  const fathersNameRef = useRef(null);
+  const fathersNationalityRef = useRef(null);
+
+  const saveFamilyInfo = () => {
     storeData(FAMILYINFO, {
       mothersname,
       mothersnationality,
@@ -42,21 +52,44 @@ const FamilyBackground = ({navigation}) => {
       });
   };
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => {
+        setKeyboardOpen(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: '#fff' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={vectorimg} style={styles.bellImage} />
           </TouchableOpacity>
-
-          <Text style={{fontSize: 20, color: '#3D4C5E'}}>KYC & Compliance</Text>
+          <Text style={{ fontSize: 20, color: '#3D4C5E' }}>KYC & Compliance</Text>
           <Image source={bell} style={styles.bellImage} />
         </View>
-        <View style={{marginTop: '10%'}}>
+        <View style={{ marginTop: '10%' }}>
           <Stepper currentPosition={3} />
         </View>
-        <View style={{width: '100%'}}>
+        <View style={{ width: '100%' }}>
           <ProgressBar
             progress={0.63}
             label="Progress"
@@ -65,8 +98,8 @@ const FamilyBackground = ({navigation}) => {
             unfilledColor="#E0E0E0"
           />
         </View>
-        <View style={{marginLeft: '11%', marginTop: '5%'}}>
-          <Text style={{fontSize: 18, fontWeight: '500', color: '#1D242D'}}>
+        <View style={{ marginLeft: '5%', marginTop: '-2%' }}>
+          <Text style={{ fontSize: 18, fontWeight: '500', color: '#1D242D' }}>
             Family Background
           </Text>
         </View>
@@ -79,39 +112,46 @@ const FamilyBackground = ({navigation}) => {
             placeholderTextColor="#909DAD"
             value={mothersname}
             onChangeText={setMothersName}
+            onSubmitEditing={() => mothersNationalityRef.current.focus()}
           />
         </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Mother's Nationality</Text>
           <TextInput
+            ref={mothersNationalityRef}
             style={styles.input}
             placeholder="Type here"
             placeholderTextColor="#909DAD"
             value={mothersnationality}
             onChangeText={setMothersNationality}
+            onSubmitEditing={() => fathersNameRef.current.focus()}
           />
         </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Father's Full Name</Text>
           <TextInput
+            ref={fathersNameRef}
             style={styles.input}
             placeholder="Type here"
             placeholderTextColor="#909DAD"
             value={fathersname}
             onChangeText={setFatherName}
+            onSubmitEditing={() => fathersNationalityRef.current.focus()}
           />
         </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Father's Nationality</Text>
           <TextInput
+            ref={fathersNationalityRef}
             style={styles.input}
             placeholder="Type here"
             placeholderTextColor="#909DAD"
             value={fathersnationality}
             onChangeText={setFathersNationality}
+            onSubmitEditing={() => Keyboard.dismiss()} // Dismiss keyboard after last input
           />
         </View>
 
@@ -149,10 +189,12 @@ const FamilyBackground = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <View style={{position: 'relative', bottom: 0, width: '100%'}}>
-        <Footer navigation={navigation} />
-      </View>
-    </View>
+      {!keyboardOpen && (
+        <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+          <Footer navigation={navigation} />
+        </View>
+      )}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -163,7 +205,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainerbtn: {
-    width: width * 0.77,
+    width: width * 0.85,
     height: height * 0.06,
     borderRadius: 15,
     overflow: 'hidden',
@@ -194,8 +236,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputContainer: {
-    marginLeft: '11%',
-    marginTop: '7%',
+    width: '100%',
+    marginLeft: '5%',
+    marginTop: '2%',
   },
   inputLabel: {
     color: '#546881',
@@ -209,7 +252,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingLeft: 12,
     borderRadius: 8,
-    marginTop: '4%',
+    marginTop: '2%',
     width: '90%',
     color: '#546881',
   },
