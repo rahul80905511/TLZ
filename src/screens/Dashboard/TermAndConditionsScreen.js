@@ -39,13 +39,17 @@ const TermAndConditionsScreen2 = ({navigation}) => {
           style={styles.bellImage}
         />
       </View>
+      <Text style={{position:'relative',right:'20%'}}>TERMS & CONDITIONS</Text>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+      
         <View style={styles.imageContainer}>
           {imageData.map((source, index) => (
             <Image key={index} source={source} style={styles.image} />
           ))}
         </View>
-        <View style={styles.buttonContainer}>
+        
+      </ScrollView>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.buttonContainerbtn}
           onPress={() => navigation.navigate('term2')}
@@ -57,8 +61,6 @@ const TermAndConditionsScreen2 = ({navigation}) => {
           </ImageBackground>
         </TouchableOpacity>
       </View>
-      </ScrollView>
-
       
       <Footer />
     </SafeAreaView>
@@ -90,10 +92,10 @@ const styles = StyleSheet.create({
   headerContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     position: 'relative',
     top: '1%',
-    width: '95%',
+    width: '113%',
     alignItems: 'center',
     marginBottom: '4%',
   },
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     overflow: 'hidden',
     marginTop: 5,
-    marginBottom: '25%',
+    marginBottom: '22%',
   },
   imageBackground: {
     flex: 1,
